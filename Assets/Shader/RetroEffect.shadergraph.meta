@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: f392ffd88f1bb824fb082a43c547cc4d
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 625f186215c104763be7675aa2d941aa, type: 3}
+  useAsTemplate: 1
+  exposeTemplateAsShader: 1
+  indexedData: {fileID: -3424247175808206760, guid: f392ffd88f1bb824fb082a43c547cc4d, type: 3}
+  template:
+    name: URP Dither Shader
+    category: My Shaders
+    description: "URP Lit Shader mit Dither-Aufl\xF6sung"
+    icon: {instanceID: 0}
+    thumbnail: {instanceID: 0}
+    order: 0
