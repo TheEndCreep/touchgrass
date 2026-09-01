@@ -1,8 +1,13 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    LayerMask layerMask;
+    private LayerMask layerMask;
+    private Vector2 moveValue;
+    [SerializeField] private float moveSpeed = 1f;
+    [SerializeField] private GameObject grassObject;
+    private int timer = 0;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -10,10 +15,14 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         AdhereToSurface();
-        transform.position = new Vector3(transform.position.x + 0.1f, transform.position.y, transform.position.z);
+        transform.Translate(new Vector3(moveValue.x, 0, moveValue.y) * moveSpeed * Time.deltaTime);
+        if (moveValue != Vector2.zero)
+        {
+            SpawnGrass();
+        }
     }
 
     private void AdhereToSurface()
@@ -24,5 +33,20 @@ public class PlayerMovement : MonoBehaviour
         {
             transform.position = hit.point;
         }
+    }
+
+    private void SpawnGrass()
+    {
+        if (timer > 100)
+        {
+            Instantiate(grassObject, transform.position, Quaternion.identity);
+            timer = 0;
+        }
+        timer++;
+    }
+
+    void OnMove(InputValue value)
+    {
+        moveValue = value.Get<Vector2>();
     }
 }
