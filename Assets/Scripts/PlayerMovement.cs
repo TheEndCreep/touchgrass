@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (moveValue != Vector2.zero)
         {
-            //SpawnGrass();
+            SpawnGrass();
         }
         if (!HasGround())
         {
@@ -54,10 +54,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void AdhereMovement()
     {
+        Vector3 savedRotation = transform.localEulerAngles;
         float savedYRotation = transform.localEulerAngles.y;
         RaycastHit hit;
         Vector3 raycastNormal;
-        Vector3 raycastPosition = transform.position;
+        Vector3 raycastPosition = transform.TransformPoint(0, 0.1f, 0);
         for (int i = 1; i < 4; i++)
         {
             Debug.DrawRay(raycastPosition, transform.forward * (0.2f * i), Color.blue, 2f);
@@ -71,6 +72,9 @@ public class PlayerMovement : MonoBehaviour
                 raycastNormal = hit.normal;
                 transform.up = raycastNormal;
                 transform.position = hit.point;
+                /**Vector3 newRotation = transform.localEulerAngles;
+                newRotation.y = savedYRotation;
+                transform.localEulerAngles = newRotation;**/
                 break;
 
                 //AdhereToSurface();
@@ -79,10 +83,10 @@ public class PlayerMovement : MonoBehaviour
             {
                 raycastNormal = hit.normal;
                 transform.up = raycastNormal;
-                Vector3 newRotation = transform.localEulerAngles;
-                newRotation.y = savedYRotation;
-                transform.localEulerAngles = newRotation;
                 transform.position = hit.point;
+                /**Vector3 newRotation = transform.localEulerAngles;
+                newRotation.y = savedYRotation;
+                transform.localEulerAngles = newRotation;**/
                 break;
                 //AdhereToSurface();
             }
@@ -90,10 +94,10 @@ public class PlayerMovement : MonoBehaviour
             {
                 raycastNormal = hit.normal;
                 transform.up = raycastNormal;
-                Vector3 newRotation = transform.localEulerAngles;
-                newRotation.y = savedYRotation;
-                transform.localEulerAngles = newRotation;
                 transform.position = hit.point;
+                /**Vector3 newRotation = transform.localEulerAngles;
+                newRotation.y = savedYRotation;
+                transform.localEulerAngles = newRotation;**/
                 break;
                 //AdhereToSurface();
             }
