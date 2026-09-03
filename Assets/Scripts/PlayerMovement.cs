@@ -70,15 +70,8 @@ public class PlayerMovement : MonoBehaviour
             if (Physics.Raycast(raycastPosition, transform.forward, out hit, 0.2f * i))
             {
                 raycastNormal = hit.normal;
-                Vector3 oldUp = transform.up;
-
-                //transform.position = hit.point;
-
-                var angle = Vector3.Angle(oldUp, raycastNormal);
-                transform.Rotate(-angle, 0f, 0f);
-
-                //transform.up = raycastNormal;
-
+                Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, raycastNormal);
+                transform.rotation = fromToRotation * transform.rotation;
                 break;
 
                 //AdhereToSurface();
@@ -86,22 +79,16 @@ public class PlayerMovement : MonoBehaviour
             else if (Physics.Raycast(raycastPosition + transform.forward * (0.2f * i), -transform.up, out hit, 0.2f * i) && !HasGround())
             {
                 raycastNormal = hit.normal;
-                transform.up = raycastNormal;
-                transform.position = hit.point;
-                /**Vector3 newRotation = transform.localEulerAngles;
-                newRotation.y = savedYRotation;
-                transform.localEulerAngles = newRotation;**/
+                Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, raycastNormal);
+                transform.rotation = fromToRotation * transform.rotation;
                 break;
                 //AdhereToSurface();
             }
             else if (Physics.Raycast(raycastPosition + (transform.forward * (0.2f * i)) - (transform.up * (0.2f * i)), -transform.forward, out hit, 0.8f * i) && !HasGround())
             {
                 raycastNormal = hit.normal;
-                transform.up = raycastNormal;
-                transform.position = hit.point;
-                /**Vector3 newRotation = transform.localEulerAngles;
-                newRotation.y = savedYRotation;
-                transform.localEulerAngles = newRotation;**/
+                Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, raycastNormal);
+                transform.rotation = fromToRotation * transform.rotation;
                 break;
                 //AdhereToSurface();
             }
