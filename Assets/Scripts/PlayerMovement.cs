@@ -32,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (moveValue != Vector2.zero)
         {
-            //SpawnGrass();
+            SpawnGrass();
         }
         if (!HasGround())
         {
@@ -104,7 +104,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void SpawnGrass()
     {
-        if (timer > 100)
+        if (timer > 50)
         {
             Instantiate(grassObject, transform.position, Quaternion.identity);
             timer = 0;

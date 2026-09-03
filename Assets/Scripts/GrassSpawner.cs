@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GrassSpawner : MonoBehaviour
@@ -6,6 +7,7 @@ public class GrassSpawner : MonoBehaviour
     [SerializeField] private float spawnAttempts = 10f;
     [SerializeField] private float spawnRadius = 3f;
     [SerializeField] private GameObject grass;
+    [SerializeField] private GameObject moss;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -108,7 +110,13 @@ public class GrassSpawner : MonoBehaviour
                 Debug.DrawLine(raycastPos, hit.point, Color.red, 2f);
                 if (hit.transform.tag == terrainTag)
                 {
-                    Instantiate(grass, hit.point, Quaternion.identity);
+                    GameObject grassTransform = Instantiate(grass, hit.point, Quaternion.identity);
+                    grassTransform.transform.up = hit.normal;
+                }
+                else if (hit.transform.tag == "Building")
+                {
+                    GameObject grassTransform = Instantiate(moss, hit.point, Quaternion.identity);
+                    grassTransform.transform.up = hit.normal;
                 }
             }
             yield return new WaitForSeconds(0.1f);
