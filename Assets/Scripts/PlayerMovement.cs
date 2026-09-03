@@ -1,3 +1,4 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -31,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (moveValue != Vector2.zero)
         {
-            SpawnGrass();
+            //SpawnGrass();
         }
         if (!HasGround())
         {
@@ -54,8 +55,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void AdhereMovement()
     {
-        Vector3 savedRotation = transform.localEulerAngles;
-        float savedYRotation = transform.localEulerAngles.y;
+        Vector3 oldDirection = transform.forward;
         RaycastHit hit;
         Vector3 raycastNormal;
         Vector3 raycastPosition = transform.TransformPoint(0, 0.1f, 0);
@@ -70,11 +70,15 @@ public class PlayerMovement : MonoBehaviour
             if (Physics.Raycast(raycastPosition, transform.forward, out hit, 0.2f * i))
             {
                 raycastNormal = hit.normal;
-                transform.up = raycastNormal;
-                transform.position = hit.point;
-                /**Vector3 newRotation = transform.localEulerAngles;
-                newRotation.y = savedYRotation;
-                transform.localEulerAngles = newRotation;**/
+                Vector3 oldUp = transform.up;
+
+                //transform.position = hit.point;
+
+                var angle = Vector3.Angle(oldUp, raycastNormal);
+                transform.Rotate(-angle, 0f, 0f);
+
+                //transform.up = raycastNormal;
+
                 break;
 
                 //AdhereToSurface();
@@ -113,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void SpawnGrass()
     {
-        if (timer > 200)
+        if (timer > 100)
         {
             Instantiate(grassObject, transform.position, Quaternion.identity);
             timer = 0;

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GrassSpawner : MonoBehaviour
@@ -19,7 +20,12 @@ public class GrassSpawner : MonoBehaviour
         {
             if (hit.transform.tag == "Floor")
             {
-                SpawnGrass(Vector3.down, "Floor");
+                StartCoroutine(SpawnGrass(Vector3.down, "Floor"));
+                Debug.DrawLine(transform.position, hit.point, Color.green, 2f);
+            }
+            else if (hit.transform.tag == "Building")
+            {
+                StartCoroutine(SpawnGrass(Vector3.down, "Building"));
                 Debug.DrawLine(transform.position, hit.point, Color.green, 2f);
             }
         }
@@ -28,7 +34,7 @@ public class GrassSpawner : MonoBehaviour
         {
             if (hit.transform.tag == "Building")
             {
-                SpawnGrass(Vector3.up, "Building");
+                StartCoroutine(SpawnGrass(Vector3.up, "Building"));
                 Debug.DrawLine(transform.position, hit.point, Color.green, 2f);
             }
         }
@@ -37,7 +43,7 @@ public class GrassSpawner : MonoBehaviour
         {
             if (hit.transform.tag == "Building")
             {
-                SpawnGrass(Vector3.forward, "Building");
+                StartCoroutine(SpawnGrass(Vector3.forward, "Building"));
                 Debug.DrawLine(transform.position, hit.point, Color.green, 2f);
             }
         }
@@ -46,7 +52,7 @@ public class GrassSpawner : MonoBehaviour
         {
             if (hit.transform.tag == "Building")
             {
-                SpawnGrass(Vector3.back, "Building");
+                StartCoroutine(SpawnGrass(Vector3.back, "Building"));
                 Debug.DrawLine(transform.position, hit.point, Color.green, 2f);
             }
         }
@@ -55,7 +61,7 @@ public class GrassSpawner : MonoBehaviour
         {
             if (hit.transform.tag == "Building")
             {
-                SpawnGrass(Vector3.right, "Building");
+                StartCoroutine(SpawnGrass(Vector3.right, "Building"));
                 Debug.DrawLine(transform.position, hit.point, Color.green, 2f);
             }
         }
@@ -64,13 +70,13 @@ public class GrassSpawner : MonoBehaviour
         {
             if (hit.transform.tag == "Building")
             {
-                SpawnGrass(Vector3.left, "Building");
+                StartCoroutine(SpawnGrass(Vector3.left, "Building"));
                 Debug.DrawLine(transform.position, hit.point, Color.green, 2f);
             }
         }
     }
 
-    private void SpawnGrass(Vector3 direction, string terrainTag)
+    private IEnumerator SpawnGrass(Vector3 direction, string terrainTag)
     {
         for (int i = 0; i < spawnAttempts; i++)
         {
@@ -105,6 +111,8 @@ public class GrassSpawner : MonoBehaviour
                     Instantiate(grass, hit.point, Quaternion.identity);
                 }
             }
+            yield return new WaitForSeconds(0.1f);
         }
+        Destroy(this.gameObject);
     }
 }
