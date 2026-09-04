@@ -45,7 +45,7 @@ public class ThirdPersonCam : MonoBehaviour
 
         float camRotationY = rotationHorizontal;
 
-        camDistance += scrollValue.y * 0.1f;
+        camDistance -= scrollValue.y * 0.1f;
         camDistance = Mathf.Clamp(camDistance, camMinDistance, camMaxDistance);
 
         Quaternion rotation = Quaternion.Euler(rotationVertical, camRotationY, 0f);
@@ -53,7 +53,6 @@ public class ThirdPersonCam : MonoBehaviour
 
         Vector3 targetPos = player.position + offset;
         transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, 0.2f);
-        //transform.position = player.position + offset;
         transform.LookAt(player.position + Vector3.up * camHeight);
     }
 

@@ -120,14 +120,20 @@ public class PlayerMovement : MonoBehaviour
         Vector3 raycastPos = transform.TransformPoint(0, 0.1f, 0);
         if (Physics.Raycast(raycastPos, transform.forward, out hit, 0.5f, barrierMask))
         {
-            Vector3 point = transform.InverseTransformPoint(hit.point);
-            if (point.x > 0)
+            if (Physics.Raycast(raycastPos, transform.right, 2f, barrierMask))
             {
-                rotateDir = -5f;
+                Debug.Log("right");
+                rotateDir = -1f;
+            }
+            else if (Physics.Raycast(raycastPos, -transform.right, 2f, barrierMask))
+            {
+                Debug.Log("left");
+                rotateDir = 1f;
             }
             else
             {
-                rotateDir = 5f;
+                Debug.Log("no direction");
+                rotateDir = 0f;
             }
         }
         while (Physics.Raycast(raycastPos, transform.forward, out hit, 0.5f, barrierMask) && rotateDir != 0f)
