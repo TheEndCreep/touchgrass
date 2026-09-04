@@ -183,6 +183,17 @@
                 },
                 {
                     "name": "",
+                    "id": "e9eeb70e-f9b1-4342-96bc-b008b73e21ed",
+                    "path": "<Gamepad>/dpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "c41cbb52-2ad5-4d70-b803-9706352d03aa",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",

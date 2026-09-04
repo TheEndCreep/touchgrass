@@ -18,6 +18,7 @@ public class ThirdPersonCam : MonoBehaviour
 
     private Vector2 mouseValue;
     private Vector2 scrollValue;
+    private Vector3 velocity = Vector3.zero;
 
     //hide cursor
     void Start()
@@ -50,7 +51,9 @@ public class ThirdPersonCam : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(rotationVertical, camRotationY, 0f);
         Vector3 offset = rotation * new Vector3(0f, camHeight, -camDistance);
 
-        transform.position = player.position + offset;
+        Vector3 targetPos = player.position + offset;
+        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, 0.2f);
+        //transform.position = player.position + offset;
         transform.LookAt(player.position + Vector3.up * camHeight);
     }
 
