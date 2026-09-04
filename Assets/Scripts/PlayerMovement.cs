@@ -1,4 +1,5 @@
 //using UnityEditor.Experimental.GraphView;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,32 +11,32 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private GameObject grassObject;
     [SerializeField] private int grassSpawnDelay = 50;
+    [SerializeField] private float moveUnlockDelayInSeconds = 2f;
     private int timer = 0;
     private RaycastHit movementHit;
+    private bool canMove = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         floorBuildingMask = LayerMask.GetMask("Floor", "Buildings");
         barrierMask = LayerMask.GetMask("Barriers");
         AdhereToSurface();
+        StartCoroutine(UnlockMovement(moveUnlockDelayInSeconds));
     }
 
     // Update is called once per frame
     void Update()
     {
-        AdhereMovement();
-
-        CheckBarrier();
-
-        MovePlayer();
-
-        AdhereToSurface();
-
-        /**if (!HasGround())
+        if (canMove)
         {
-            Debug.Log("Ha");
+            AdhereMovement();
+
+            CheckBarrier();
+
+            MovePlayer();
+
             AdhereToSurface();
-        }**/
+        }
     }
 
     private void AdhereToSurface()
@@ -157,6 +158,12 @@ public class PlayerMovement : MonoBehaviour
             timer = 0;
         }
         timer++;
+    }
+
+    private IEnumerator UnlockMovement(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        canMove = true;
     }
 
     void OnMove(InputValue value)
