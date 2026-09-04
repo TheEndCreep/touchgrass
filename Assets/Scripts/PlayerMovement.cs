@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private LayerMask layerMask;
+    private LayerMask floorBuildingMask;
+    private LayerMask barrierMask;
     private Vector2 moveValue;
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private GameObject grassObject;
@@ -14,7 +15,8 @@ public class PlayerMovement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        layerMask = LayerMask.GetMask("Floor", "Buildings");
+        floorBuildingMask = LayerMask.GetMask("Floor", "Buildings");
+        barrierMask = LayerMask.GetMask("Barriers");
         AdhereToSurface();
     }
 
@@ -22,35 +24,25 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         AdhereMovement();
-        //transform.Translate(new Vector3(moveValue.x, 0, moveValue.y) * moveSpeed * Time.deltaTime);
-        if (moveValue.x > 0)
-        {
-            transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
 
-        }
+        CheckBarrier();
 
-        if (moveValue.y != 0)
-        {
-            transform.Rotate(new Vector3(0, moveValue.y, 0));
-        }
-        if (moveValue != Vector2.zero)
-        {
-            SpawnGrass();
-        }
+        MovePlayer();
 
         AdhereToSurface();
-        if (!HasGround())
+
+        /**if (!HasGround())
         {
             Debug.Log("Ha");
-            //AdhereToSurface();
-        }
+            AdhereToSurface();
+        }**/
     }
 
     private void AdhereToSurface()
     {
         RaycastHit hit;
         Vector3 raycastPosition = transform.TransformPoint(0, 0.6f, 0);
-        if (Physics.Raycast(raycastPosition, -transform.up, out hit, 1.5f, layerMask))
+        if (Physics.Raycast(raycastPosition, -transform.up, out hit, 1.5f, floorBuildingMask))
         {
             Debug.DrawLine(raycastPosition, hit.point, Color.purple, 1f);
             //transform.position = new Vector3(hit.point.x, hit.point.y + 0.1f, hit.point.z);
@@ -63,15 +55,15 @@ public class PlayerMovement : MonoBehaviour
         movementHit = new RaycastHit();
         Vector3 raycastNormal;
         Vector3 raycastPosition = transform.TransformPoint(0, 0.1f, 0);
-        for (int i = 1; i < 4; i++)
+        for (int i = 1; i < 7; i++)
         {
-            Debug.DrawRay(raycastPosition, transform.forward * (0.2f * i), Color.blue, 2f);
+            Debug.DrawRay(raycastPosition, transform.forward * (0.1f * i), Color.blue, 2f);
             if (!HasGround())
             {
-                Debug.DrawRay(raycastPosition + transform.forward * (0.2f * i), -transform.up * (0.2f * i), Color.blue, 2f);
-                Debug.DrawRay(raycastPosition + (transform.forward * (0.2f * i)) - (transform.up * (0.2f * i)), -transform.forward * (0.8f * i), Color.blue, 2f);
+                Debug.DrawRay(raycastPosition + transform.forward * (0.1f * i), -transform.up * (0.1f * i), Color.blue, 2f);
+                Debug.DrawRay(raycastPosition + (transform.forward * (0.1f * i)) - (transform.up * (0.1f * i)), -transform.forward * (0.5f * i), Color.blue, 2f);
             }
-            if (Physics.Raycast(raycastPosition, transform.forward, out movementHit, 0.2f * i, layerMask))
+            if (Physics.Raycast(raycastPosition, transform.forward, out movementHit, 0.1f * i, floorBuildingMask))
             {
                 if (movementHit.transform.tag != "Barrier")
                 {
@@ -81,7 +73,7 @@ public class PlayerMovement : MonoBehaviour
                     break;
                 }
             }
-            else if (Physics.Raycast(raycastPosition + transform.forward * (0.2f * i), -transform.up, out movementHit, 0.2f * i, layerMask) && !HasGround())
+            else if (Physics.Raycast(raycastPosition + transform.forward * (0.1f * i), -transform.up, out movementHit, 0.1f * i, floorBuildingMask) && !HasGround())
             {
                 if (movementHit.transform.tag != "Barrier")
                 {
@@ -91,7 +83,7 @@ public class PlayerMovement : MonoBehaviour
                     break;
                 }
             }
-            else if (Physics.Raycast(raycastPosition + (transform.forward * (0.2f * i)) - (transform.up * (0.2f * i)), -transform.forward, out movementHit, 0.8f * i, layerMask) && !HasGround())
+            else if (Physics.Raycast(raycastPosition + (transform.forward * (0.1f * i)) - (transform.up * (0.1f * i)), -transform.forward, out movementHit, 0.5f * i, floorBuildingMask) && !HasGround())
             {
                 if (movementHit.transform.tag != "Barrier")
                 {
@@ -104,11 +96,51 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void MovePlayer()
+    {
+        if (moveValue.x > 0)
+        {
+            transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
+        }
+
+        if (moveValue.y != 0)
+        {
+            transform.Rotate(new Vector3(0, moveValue.y, 0));
+        }
+        if (moveValue != Vector2.zero)
+        {
+            SpawnGrass();
+        }
+    }
+
+    private void CheckBarrier()
+    {
+        RaycastHit hit;
+        float rotateDir = 0f;
+        Vector3 raycastPos = transform.TransformPoint(0, 0.1f, 0);
+        if (Physics.Raycast(raycastPos, transform.forward, out hit, 0.5f, barrierMask))
+        {
+            Vector3 point = transform.InverseTransformPoint(hit.point);
+            if (point.x > 0)
+            {
+                rotateDir = -5f;
+            }
+            else
+            {
+                rotateDir = 5f;
+            }
+        }
+        while (Physics.Raycast(raycastPos, transform.forward, out hit, 0.5f, barrierMask) && rotateDir != 0f)
+        {
+            transform.Rotate(0, rotateDir, 0, Space.Self);
+        }
+    }
+
     private bool HasGround()
     {
         Vector3 raycastPos = transform.TransformPoint(0, 0.1f, 0);
         Debug.DrawRay(raycastPos, -transform.up * 0.3f, Color.green, 1f);
-        return Physics.Raycast(raycastPos, -transform.up, 0.3f, layerMask);
+        return Physics.Raycast(raycastPos, -transform.up, 0.3f, floorBuildingMask);
     }
 
     private void SpawnGrass()

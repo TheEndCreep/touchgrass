@@ -6,6 +6,8 @@ public class ThirdPersonCam : MonoBehaviour
     [SerializeField] private Transform player;
     [SerializeField] private float mouseSensitivity = 3f;
     [SerializeField] private float camDistance = 5f;
+    [SerializeField] private float camMinDistance = 3f;
+    [SerializeField] private float camMaxDistance = 8f;
     [SerializeField] private float camHeight = 1f;
     [SerializeField] private float rotationHVerticalMin = -15f;
     [SerializeField] private float rotationVerticalMax = 60f;
@@ -15,6 +17,7 @@ public class ThirdPersonCam : MonoBehaviour
     private bool isPlayerMoving = false;
 
     private Vector2 mouseValue;
+    private Vector2 scrollValue;
 
     //hide cursor
     void Start()
@@ -41,6 +44,9 @@ public class ThirdPersonCam : MonoBehaviour
 
         float camRotationY = rotationHorizontal;
 
+        camDistance += scrollValue.y * 0.1f;
+        camDistance = Mathf.Clamp(camDistance, camMinDistance, camMaxDistance);
+
         Quaternion rotation = Quaternion.Euler(rotationVertical, camRotationY, 0f);
         Vector3 offset = rotation * new Vector3(0f, camHeight, -camDistance);
 
@@ -56,6 +62,11 @@ public class ThirdPersonCam : MonoBehaviour
     void OnLook(InputValue value)
     {
         mouseValue = value.Get<Vector2>();
+    }
+
+    void OnZoom(InputValue value)
+    {
+        scrollValue = value.Get<Vector2>();
     }
 }
 
