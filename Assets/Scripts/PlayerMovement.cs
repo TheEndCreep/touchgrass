@@ -10,10 +10,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject grassObject;
     [SerializeField] private int grassSpawnDelay = 50;
     private int timer = 0;
+    private RaycastHit movementHit;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        layerMask = LayerMask.GetMask("Floor");
+        layerMask = LayerMask.GetMask("Floor", "Buildings");
         AdhereToSurface();
     }
 
@@ -25,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
         if (moveValue.x > 0)
         {
             transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
+
         }
 
         if (moveValue.y != 0)
@@ -35,10 +37,12 @@ public class PlayerMovement : MonoBehaviour
         {
             SpawnGrass();
         }
+
+        AdhereToSurface();
         if (!HasGround())
         {
             Debug.Log("Ha");
-            AdhereToSurface();
+            //AdhereToSurface();
         }
     }
 
@@ -46,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 raycastPosition = transform.TransformPoint(0, 0.6f, 0);
-        if (Physics.Raycast(raycastPosition, -transform.up, out hit, 1.5f))
+        if (Physics.Raycast(raycastPosition, -transform.up, out hit, 1.5f, layerMask))
         {
             Debug.DrawLine(raycastPosition, hit.point, Color.purple, 1f);
             //transform.position = new Vector3(hit.point.x, hit.point.y + 0.1f, hit.point.z);
@@ -56,8 +60,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void AdhereMovement()
     {
-        Vector3 oldDirection = transform.forward;
-        RaycastHit hit;
+        movementHit = new RaycastHit();
         Vector3 raycastNormal;
         Vector3 raycastPosition = transform.TransformPoint(0, 0.1f, 0);
         for (int i = 1; i < 4; i++)
@@ -68,30 +71,35 @@ public class PlayerMovement : MonoBehaviour
                 Debug.DrawRay(raycastPosition + transform.forward * (0.2f * i), -transform.up * (0.2f * i), Color.blue, 2f);
                 Debug.DrawRay(raycastPosition + (transform.forward * (0.2f * i)) - (transform.up * (0.2f * i)), -transform.forward * (0.8f * i), Color.blue, 2f);
             }
-            if (Physics.Raycast(raycastPosition, transform.forward, out hit, 0.2f * i))
+            if (Physics.Raycast(raycastPosition, transform.forward, out movementHit, 0.2f * i, layerMask))
             {
-                raycastNormal = hit.normal;
-                Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, raycastNormal);
-                transform.rotation = fromToRotation * transform.rotation;
-                break;
-
-                //AdhereToSurface();
+                if (movementHit.transform.tag != "Barrier")
+                {
+                    raycastNormal = movementHit.normal;
+                    Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, raycastNormal);
+                    transform.rotation = fromToRotation * transform.rotation;
+                    break;
+                }
             }
-            else if (Physics.Raycast(raycastPosition + transform.forward * (0.2f * i), -transform.up, out hit, 0.2f * i) && !HasGround())
+            else if (Physics.Raycast(raycastPosition + transform.forward * (0.2f * i), -transform.up, out movementHit, 0.2f * i, layerMask) && !HasGround())
             {
-                raycastNormal = hit.normal;
-                Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, raycastNormal);
-                transform.rotation = fromToRotation * transform.rotation;
-                break;
-                //AdhereToSurface();
+                if (movementHit.transform.tag != "Barrier")
+                {
+                    raycastNormal = movementHit.normal;
+                    Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, raycastNormal);
+                    transform.rotation = fromToRotation * transform.rotation;
+                    break;
+                }
             }
-            else if (Physics.Raycast(raycastPosition + (transform.forward * (0.2f * i)) - (transform.up * (0.2f * i)), -transform.forward, out hit, 0.8f * i) && !HasGround())
+            else if (Physics.Raycast(raycastPosition + (transform.forward * (0.2f * i)) - (transform.up * (0.2f * i)), -transform.forward, out movementHit, 0.8f * i, layerMask) && !HasGround())
             {
-                raycastNormal = hit.normal;
-                Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, raycastNormal);
-                transform.rotation = fromToRotation * transform.rotation;
-                break;
-                //AdhereToSurface();
+                if (movementHit.transform.tag != "Barrier")
+                {
+                    raycastNormal = movementHit.normal;
+                    Quaternion fromToRotation = Quaternion.FromToRotation(transform.up, raycastNormal);
+                    transform.rotation = fromToRotation * transform.rotation;
+                    break;
+                }
             }
         }
     }
@@ -100,7 +108,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 raycastPos = transform.TransformPoint(0, 0.1f, 0);
         Debug.DrawRay(raycastPos, -transform.up * 0.3f, Color.green, 1f);
-        return Physics.Raycast(raycastPos, -transform.up, 0.3f);
+        return Physics.Raycast(raycastPos, -transform.up, 0.3f, layerMask);
     }
 
     private void SpawnGrass()
