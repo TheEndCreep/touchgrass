@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Floor
   - Building
+  - Barrier
   layers:
   - Default
   - TransparentFX
@@ -13,8 +14,8 @@ TagManager:
   - Floor
   - Water
   - UI
-  - 
-  - 
+  - Buildings
+  - Barriers
   - 
   - 
   - 
