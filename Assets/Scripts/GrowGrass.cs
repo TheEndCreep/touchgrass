@@ -24,7 +24,7 @@ public class GrowGrass : MonoBehaviour
         float nextScale = Mathf.Lerp(startScale, finalScale, t);
         transform.localScale = new Vector3(nextScale, nextScale, nextScale);
 
-        t += 0.5f * Time.deltaTime;
+        t += 0.7f * Time.deltaTime;
 
         if (t > 1f)
         {

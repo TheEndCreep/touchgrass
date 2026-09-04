@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 moveValue;
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private GameObject grassObject;
+    [SerializeField] private int grassSpawnDelay = 50;
     private int timer = 0;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -104,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void SpawnGrass()
     {
-        if (timer > 50)
+        if (timer > grassSpawnDelay)
         {
             Instantiate(grassObject, transform.position, Quaternion.identity);
             timer = 0;

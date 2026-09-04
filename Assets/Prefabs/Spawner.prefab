@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9b3fc89caaf07a47ab25c47ad79e492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrassSpawner
-  spawnAttempts: 20
+  spawnAttempts: 15
   spawnRadius: 3
   grass: {fileID: 1387494156910367848, guid: c52e6a40d9c99184c8a82ada9f7afbb7, type: 3}
   moss: {fileID: 3113728498178818761, guid: 0c35ce67183dda6468e46d218dd1f50e, type: 3}

@@ -107,6 +107,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   moveSpeed: 3
   grassObject: {fileID: 5162514167421301472, guid: 466f6b01061724945abddca1c0add522, type: 3}
+  grassSpawnDelay: 25
 --- !u!114 &6369111138890182905
 MonoBehaviour:
   m_ObjectHideFlags: 0
